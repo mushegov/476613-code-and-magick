@@ -11,6 +11,7 @@ var windowWidth;
 var WINDOW_HEIGHT = 270;
 var WINDOW_SHADOW_WIDTH = 10;
 var WINDOW_PADDING = 40;
+var HEADING_OFFSET = 10;
 
 // размеры плашек
 var BAR_WIDTH = 40;
@@ -21,8 +22,7 @@ var BAR_GAP = 50;
 var WINDOW_BACKGROUND_COLOR = '#ffffff';
 var WINDOW_SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
 var DEFAULT_TEXT_COLOR = '#000000';
-// var DEFAULT_BAR_COLOR = '#00ffff';
-// var PLAYER_BAR_COLOR = '#ff0000';
+var PLAYER_BAR_COLOR = 'rgba(255, 0, 0, 1)';
 
 // шрифты
 var DEFAULT_FONT = 'PT Mono';
@@ -61,7 +61,24 @@ var renderLabel = function (ctx, text, x, y, color) {
   ctx.fillText(text, x, y);
 };
 
+var calculateBestResult = function (results) {
+  var bestResult = 1;
+
+  for (var i = 0; i < results.length; i++) {
+    if (results[i] > bestResult) {
+      bestResult = results[i];
+    }
+  }
+
+  return bestResult;
+};
+
+var getRandomOpacity = function (min, max) {
+  return Math.random() * (max - min) + min;
+};
+
 window.renderStatistics = function (ctx, names, times) {
+  // узнаем количество игроков
   var amountOfPlayers = names.length;
 
   // определяем ширину окна исходя из количества игроков
@@ -77,14 +94,35 @@ window.renderStatistics = function (ctx, names, times) {
   renderRect(ctx, startCoords.x, startCoords.y, windowWidth, WINDOW_HEIGHT, WINDOW_BACKGROUND_COLOR);
 
   // рисуем заголовок
-  renderLabel(ctx, 'Ура вы победили!', startCoords.x + WINDOW_PADDING, startCoords.y + WINDOW_PADDING, DEFAULT_TEXT_COLOR);
-  renderLabel(ctx, 'Список результатов:', startCoords.x + WINDOW_PADDING, startCoords.y + WINDOW_PADDING + DEFAULT_LINE_HEIGHT, DEFAULT_TEXT_COLOR);
+  renderLabel(ctx, 'Ура вы победили!', startCoords.x + WINDOW_PADDING - HEADING_OFFSET, startCoords.y + WINDOW_PADDING - HEADING_OFFSET, DEFAULT_TEXT_COLOR);
+  renderLabel(ctx, 'Список результатов:', startCoords.x + WINDOW_PADDING - HEADING_OFFSET, startCoords.y + WINDOW_PADDING + DEFAULT_LINE_HEIGHT - HEADING_OFFSET, DEFAULT_TEXT_COLOR);
+
+  // вычисляем лучший результат
+  var bestResult = calculateBestResult(times);
 
   // рисуем результаты
-  // for (var i = 0; i < amountOfPlayers; i++) {
-  //   renderLabel(ctx, names[i] + Math.round(times[i]), startCoords.x + WINDOW_PADDING, startCoords.y + WINDOW_PADDING + 60 + i * DEFAULT_LINE_HEIGHT, DEFAULT_TEXT_COLOR);
-  // }
+  for (var i = 0; i < amountOfPlayers; i++) {
+    // посчитаем координату Х один раз, потому что она общая для всех расчетов
+    var coordX = startCoords.x + WINDOW_PADDING + (BAR_GAP + BAR_WIDTH) * i;
 
-  renderLabel(ctx, names[0], startCoords.x + WINDOW_PADDING, startCoords.y + WINDOW_HEIGHT - WINDOW_PADDING, '#bada55');
-  renderRect(ctx, startCoords.x + WINDOW_PADDING, startCoords.y + WINDOW_HEIGHT - WINDOW_PADDING - DEFAULT_LINE_HEIGHT - BAR_MAX_HEIGHT, BAR_WIDTH, BAR_MAX_HEIGHT, '#bada55');
+    // определяем высоту плашки относительно лучшего результата
+    var barHeight = (times[i] * BAR_MAX_HEIGHT) / bestResult;
+
+    // определяем цвет плашки в зависимости от игрока
+    var barColor;
+    if (names[i] === 'Вы') {
+      barColor = PLAYER_BAR_COLOR;
+    } else {
+      barColor = 'rgba(0, 0, 255, ' + getRandomOpacity(0.5, 1) + ')';
+    }
+
+    // рисуем результат
+    renderLabel(ctx, Math.round(times[i]), coordX, startCoords.y + WINDOW_HEIGHT - WINDOW_PADDING - DEFAULT_LINE_HEIGHT - barHeight - DEFAULT_LINE_HEIGHT, DEFAULT_TEXT_COLOR);
+
+    // рисуем плашку
+    renderRect(ctx, coordX, startCoords.y + WINDOW_HEIGHT - WINDOW_PADDING - DEFAULT_LINE_HEIGHT - barHeight, BAR_WIDTH, barHeight, barColor);
+
+    // рисуем имя
+    renderLabel(ctx, names[i], coordX, startCoords.y + WINDOW_HEIGHT - WINDOW_PADDING, DEFAULT_TEXT_COLOR);
+  }
 };
