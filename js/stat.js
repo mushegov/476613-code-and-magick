@@ -113,7 +113,7 @@ window.renderStatistics = function (ctx, names, times) {
     if (names[i] === 'Вы') {
       barColor = PLAYER_BAR_COLOR;
     } else {
-      barColor = 'rgba(0, 0, 255, ' + getRandomOpacity(0.5, 1) + ')';
+      barColor = 'rgba(0, 0, 255, ' + getRandomOpacity(0.2, 1) + ')';
     }
 
     // рисуем результат
