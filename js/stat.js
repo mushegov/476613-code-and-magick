@@ -109,12 +109,7 @@ window.renderStatistics = function (ctx, names, times) {
     var barHeight = (times[i] * BAR_MAX_HEIGHT) / bestResult;
 
     // определяем цвет плашки в зависимости от игрока
-    var barColor;
-    if (names[i] === 'Вы') {
-      barColor = PLAYER_BAR_COLOR;
-    } else {
-      barColor = 'rgba(0, 0, 255, ' + getRandomOpacity(0.2, 1) + ')';
-    }
+    var barColor = names[i] === 'Вы' ? PLAYER_BAR_COLOR : 'rgba(0, 0, 255, ' + getRandomOpacity(0.2, 1) + ')';
 
     // рисуем результат
     renderLabel(ctx, Math.round(times[i]), coordX, startCoords.y + WINDOW_HEIGHT - WINDOW_PADDING - DEFAULT_LINE_HEIGHT - barHeight - DEFAULT_LINE_HEIGHT, DEFAULT_TEXT_COLOR);
