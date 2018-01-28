@@ -62,9 +62,9 @@ var renderLabel = function (ctx, text, x, y, color) {
 };
 
 var calculateBestResult = function (results) {
-  var bestResult = 1;
+  var bestResult = results[0];
 
-  for (var i = 0; i < results.length; i++) {
+  for (var i = 1; i < results.length; i++) {
     if (results[i] > bestResult) {
       bestResult = results[i];
     }
