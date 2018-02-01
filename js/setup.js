@@ -1,9 +1,49 @@
 'use strict';
 
-// Находим окно с настройками и показываем его
-document.querySelector('.setup').classList.remove('hidden');
+// -------------
+// ФУНКЦИИ
+// -------------
 
-// Массив исходных данных
+// Выбираем случайный элемент из массива
+var getRandomArrayElement = function (array) {
+  var id = Math.floor(Math.random() * array.length);
+  var element = array[id];
+
+  // Удаляем уже использованный элемент из массива, чтобы все перснажи были уникальными
+  // Нужно отключить если количество требуемых персонажей больше чем случайных значений(5)
+  array.splice(id, 1);
+
+  return element;
+};
+
+// Генерируем DOM-элемент персонажа
+var renderWizard = function (wizard) {
+  // Создаем элемент из шаблона
+  var element = similarWizardTemplate.cloneNode(true);
+
+  // Записываем данные в элемент
+  // Имя
+  element.querySelector('.setup-similar-label').textContent = wizard.name;
+
+  // Цвет плаща
+  element.querySelector('.wizard-coat').style.fill = wizard.coatColor;
+
+  // Цвет глаз
+  element.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
+
+  return element;
+};
+
+// -------------
+
+
+// -------------
+// КОНСТАНТЫ
+// -------------
+
+// Количество требуемых случайных персонажей
+var SIMILAR_WIZARDS_AMOUNT = 4;
+
 // Имена
 var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 
@@ -16,19 +56,37 @@ var WIZARD_COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 1
 // Цвета глаз
 var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 
-// Генерируем случайно целое число между min и max значениями
-var getRandomRoundNumber = function (min, max) {
-  return Math.round(Math.random() * (max - min) + min);
-};
+// -------------
+
 
 // Объявляем массив похожих персонажей
 var similarWizards = [];
 
-//  и запонляем его случайным образом
-for (var i = 0; i < 4; i++) {
+// и запонляем его случайными данными
+for (var i = 0; i < SIMILAR_WIZARDS_AMOUNT; i++) {
   similarWizards[i] = {
-    name: WIZARD_NAMES[getRandomRoundNumber(0, WIZARD_NAMES.length) - 1] + ' ' + WIZARD_SURNAMES[getRandomRoundNumber(0, WIZARD_SURNAMES.length - 1)],
-    coatColor: WIZARD_COAT_COLORS[getRandomRoundNumber(0, WIZARD_COAT_COLORS.length - 1)],
-    eyesColor: WIZARD_EYES_COLORS[getRandomRoundNumber(0, WIZARD_EYES_COLORS.length - 1)]
+    name: getRandomArrayElement(WIZARD_NAMES) + ' ' + getRandomArrayElement(WIZARD_SURNAMES),
+    coatColor: getRandomArrayElement(WIZARD_COAT_COLORS),
+    eyesColor: getRandomArrayElement(WIZARD_EYES_COLORS)
   };
 }
+
+// Находим окно с настройками и показываем его
+document.querySelector('.setup').classList.remove('hidden');
+
+// Ищем шаблон похожего персонажа
+var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
+
+// Создаем фрагмент для списка похожих персонажей
+var similarWizardsFragment = document.createDocumentFragment();
+
+// Генерируем элемент для каждого персонажа и добавляем его во фрагмент
+for (i = 0; i < SIMILAR_WIZARDS_AMOUNT; i++) {
+  similarWizardsFragment.appendChild(renderWizard(similarWizards[i]));
+}
+
+// Вставляем готовый фрагмент в DOM
+document.querySelector('.setup-similar-list').appendChild(similarWizardsFragment);
+
+// Показываем блок с похожыми персонажами
+document.querySelector('.setup-similar').classList.remove('hidden');
