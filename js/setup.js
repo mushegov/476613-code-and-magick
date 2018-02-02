@@ -56,6 +56,11 @@ var renderWizard = function (wizard) {
   return element;
 };
 
+// Показываем блок "Похожие персонажи"
+var showSimilarWizards = function () {
+  document.querySelector('.setup-similar').classList.remove('hidden');
+};
+
 // -------------
 
 
@@ -89,4 +94,4 @@ for (i = 0; i < SIMILAR_WIZARDS_AMOUNT; i++) {
 document.querySelector('.setup-similar-list').appendChild(similarWizardsFragment);
 
 // Показываем блок с похожыми персонажами
-document.querySelector('.setup-similar').classList.remove('hidden');
+showSimilarWizards();
