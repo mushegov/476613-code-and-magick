@@ -61,6 +61,11 @@ var showSimilarWizards = function () {
   document.querySelector('.setup-similar').classList.remove('hidden');
 };
 
+// Показываем блок "Настройки"
+var showSetupWindow = function () {
+  document.querySelector('.setup').classList.remove('hidden');
+};
+
 // -------------
 
 
@@ -76,8 +81,8 @@ for (var i = 0; i < SIMILAR_WIZARDS_AMOUNT; i++) {
   };
 }
 
-// Находим окно с настройками и показываем его
-document.querySelector('.setup').classList.remove('hidden');
+// Показываем блок "Настройки"
+showSetupWindow();
 
 // Ищем шаблон похожего персонажа
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
