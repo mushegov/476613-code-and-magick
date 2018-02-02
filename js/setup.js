@@ -74,11 +74,13 @@ var similarWizards = [];
 
 // и запонляем его случайными данными
 for (var i = 0; i < SIMILAR_WIZARDS_AMOUNT; i++) {
-  similarWizards[i] = {
+  var wizard = {
     name: getRandomArrayElement(WIZARD_NAMES) + ' ' + getRandomArrayElement(WIZARD_SURNAMES),
     coatColor: getRandomArrayElement(WIZARD_COAT_COLORS),
     eyesColor: getRandomArrayElement(WIZARD_EYES_COLORS)
   };
+
+  similarWizards.push(wizard);
 }
 
 // Показываем блок "Настройки"
