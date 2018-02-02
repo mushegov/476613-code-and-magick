@@ -38,10 +38,34 @@ var getRandomArrayElement = function (array) {
   return element;
 };
 
+// Генерируем массив случайных магов
+var generateRandowWizardsArray = function (amount) {
+  // Объявляем массив похожих персонажей
+  var array = [];
+
+  // и запонляем его случайными данными
+  for (var i = 0; i < amount; i++) {
+    var wizard = {
+      name: getRandomArrayElement(WIZARD_NAMES) + ' ' + getRandomArrayElement(WIZARD_SURNAMES),
+      coatColor: getRandomArrayElement(WIZARD_COAT_COLORS),
+      eyesColor: getRandomArrayElement(WIZARD_EYES_COLORS)
+    };
+
+    array.push(wizard);
+  }
+
+  return array;
+};
+
+// Показываем блок "Настройки"
+var showSetup = function () {
+  document.querySelector('.setup').classList.remove('hidden');
+};
+
 // Генерируем DOM-элемент персонажа
-var renderWizard = function (wizard) {
+var renderWizard = function (wizard, template) {
   // Создаем элемент из шаблона
-  var element = similarWizardTemplate.cloneNode(true);
+  var element = template.cloneNode(true);
 
   // Записываем данные в элемент
   // Имя
@@ -56,49 +80,43 @@ var renderWizard = function (wizard) {
   return element;
 };
 
+// Генерируем DOM-элемент списка персонажей
+var renderSimilarWizards = function (array) {
+  // Ищем шаблон похожего персонажа
+  var template = document.querySelector('#similar-wizard-template').content;
+
+  // Создаем фрагмент для списка похожих персонажей
+  var fragment = document.createDocumentFragment();
+
+  // Генерируем элемент для каждого персонажа и добавляем его во фрагмент
+  for (var i = 0; i < array.length; i++) {
+    var element = renderWizard(array[i], template);
+    fragment.appendChild(element);
+  }
+
+  // Вставляем готовый фрагмент в DOM
+  document.querySelector('.setup-similar-list').appendChild(fragment);
+};
+
 // Показываем блок "Похожие персонажи"
 var showSimilarWizards = function () {
   document.querySelector('.setup-similar').classList.remove('hidden');
 };
-
-// Показываем блок "Настройки"
-var showSetupWindow = function () {
-  document.querySelector('.setup').classList.remove('hidden');
-};
-
 // -------------
 
 
-// Объявляем массив похожих персонажей
-var similarWizards = [];
-
-// и запонляем его случайными данными
-for (var i = 0; i < SIMILAR_WIZARDS_AMOUNT; i++) {
-  var wizard = {
-    name: getRandomArrayElement(WIZARD_NAMES) + ' ' + getRandomArrayElement(WIZARD_SURNAMES),
-    coatColor: getRandomArrayElement(WIZARD_COAT_COLORS),
-    eyesColor: getRandomArrayElement(WIZARD_EYES_COLORS)
-  };
-
-  similarWizards.push(wizard);
-}
+// -------------
+// Задачи
+// -------------
 
 // Показываем блок "Настройки"
-showSetupWindow();
+showSetup();
 
-// Ищем шаблон похожего персонажа
-var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
+// Генерируем массив случайных персонажей
+var similarWizards = generateRandowWizardsArray(SIMILAR_WIZARDS_AMOUNT);
 
-// Создаем фрагмент для списка похожих персонажей
-var similarWizardsFragment = document.createDocumentFragment();
+// Генерируем DOM-элемент списка персонажей
+renderSimilarWizards(similarWizards);
 
-// Генерируем элемент для каждого персонажа и добавляем его во фрагмент
-for (i = 0; i < SIMILAR_WIZARDS_AMOUNT; i++) {
-  similarWizardsFragment.appendChild(renderWizard(similarWizards[i]));
-}
-
-// Вставляем готовый фрагмент в DOM
-document.querySelector('.setup-similar-list').appendChild(similarWizardsFragment);
-
-// Показываем блок с похожыми персонажами
+// Показываем DOM-элемен списка персонажей
 showSimilarWizards();
