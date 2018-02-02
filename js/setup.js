@@ -39,7 +39,7 @@ var getRandomArrayElement = function (array) {
 };
 
 // Генерируем массив случайных магов
-var generateRandowWizardsArray = function (amount) {
+var generateRandomWizardsArray = function (amount) {
   // Объявляем массив похожих персонажей
   var array = [];
 
@@ -113,7 +113,7 @@ var showSimilarWizards = function () {
 showSetup();
 
 // Генерируем массив случайных персонажей
-var similarWizards = generateRandowWizardsArray(SIMILAR_WIZARDS_AMOUNT);
+var similarWizards = generateRandomWizardsArray(SIMILAR_WIZARDS_AMOUNT);
 
 // Генерируем DOM-элемент списка персонажей
 renderSimilarWizards(similarWizards);
