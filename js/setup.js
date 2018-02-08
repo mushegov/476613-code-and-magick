@@ -7,6 +7,10 @@
 // Количество требуемых случайных персонажей
 var SIMILAR_WIZARDS_AMOUNT = 4;
 
+// Коды клавиш
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
 // Имена
 var WIZARD_NAMES = [
   'Иван',
@@ -63,6 +67,21 @@ var WIZARD_FIREBALL_COLORS = [
 
 
 // -------------
+// ПЕРЕМЕННЫЕ
+// -------------
+
+//
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = setup.querySelector('.setup-close');
+var wizardCoat = setup.querySelector('.wizard-coat');
+var wizardEyes = setup.querySelector('.wizard-eyes');
+var wizardFireball = setup.querySelector('.setup-fireball-wrap');
+
+// -------------
+
+
+// -------------
 // ФУНКЦИИ
 // -------------
 
@@ -70,10 +89,6 @@ var WIZARD_FIREBALL_COLORS = [
 var getRandomArrayElement = function (array) {
   var id = Math.floor(Math.random() * array.length);
   var element = array[id];
-
-  // Удаляем уже использованный элемент из массива, чтобы все перснажи были уникальными
-  // Нужно отключить если количество требуемых персонажей больше чем случайных значений(5)
-  array.splice(id, 1);
 
   return element;
 };
@@ -97,9 +112,21 @@ var generateRandomWizardsArray = function (amount) {
   return array;
 };
 
-// Показываем блок "Настройки"
-var showSetup = function () {
-  document.querySelector('.setup').classList.remove('hidden');
+// Показываем окно "Настройки"
+var openSetup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+// Скрываем окно "Настройки"
+var closeSetup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+// Проверяем открыто ли окно "Настройки"
+var checkIsSetupOpen = function () {
+  return setup.classList.contains('hidden') ? false : true;
 };
 
 // Генерируем DOM-элемент персонажа
@@ -142,15 +169,90 @@ var renderSimilarWizards = function (array) {
 var showSimilarWizards = function () {
   document.querySelector('.setup-similar').classList.remove('hidden');
 };
+
+// Устанавливаем случайный цвет для плаща
+var setRandomCoatColor = function () {
+  wizardCoat.style.fill = getRandomArrayElement(WIZARD_COAT_COLORS);
+};
+
+// Устанавливаем случайный цвет для глаз
+var setRandomEyesColor = function () {
+  wizardEyes.style.fill = getRandomArrayElement(WIZARD_EYES_COLORS);
+};
+
+// Устанавливаем случайный цвет для глаз
+var setRandomFireballColor = function () {
+  wizardFireball.style.background = getRandomArrayElement(WIZARD_FIREBALL_COLORS);
+};
+
 // -------------
 
 
 // -------------
-// Задачи
+// ОБРАБОТЧИКИ
 // -------------
 
-// Показываем блок "Настройки"
-showSetup();
+//
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && !evt.target.classList.contains('setup-user-name')) {
+    closeSetup();
+  }
+};
+
+// -------------
+
+
+// -------------
+// СОБЫТИЯ
+// -------------
+
+// Открываем окно настроек по клику
+setupOpen.addEventListener('click', function () {
+  if (!checkIsSetupOpen()) {
+    openSetup();
+  }
+});
+
+// Открываем окно настроек через клавиатуру
+setupOpen.addEventListener('keydown', function (evt) {
+  if (!checkIsSetupOpen() && evt.keyCode === ENTER_KEYCODE) {
+    openSetup();
+  }
+});
+
+// Закрываем окно настроек по клику
+setupClose.addEventListener('click', function () {
+  closeSetup();
+});
+
+// Закрываем окно настроек через клавиатуру
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeSetup();
+  }
+});
+
+//
+wizardCoat.addEventListener('click', function () {
+  setRandomCoatColor();
+});
+
+//
+wizardEyes.addEventListener('click', function () {
+  setRandomEyesColor();
+});
+
+//
+wizardFireball.addEventListener('click', function () {
+  setRandomFireballColor();
+});
+
+// -------------
+
+
+// -------------
+// ЗАДАЧИ
+// -------------
 
 // Генерируем массив случайных персонажей
 var similarWizards = generateRandomWizardsArray(SIMILAR_WIZARDS_AMOUNT);
