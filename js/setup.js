@@ -180,7 +180,7 @@ var setRandomEyesColor = function () {
   wizardEyes.style.fill = getRandomArrayElement(WIZARD_EYES_COLORS);
 };
 
-// Устанавливаем случайный цвет для глаз
+// Устанавливаем случайный цвет для фаербола
 var setRandomFireballColor = function () {
   wizardFireball.style.background = getRandomArrayElement(WIZARD_FIREBALL_COLORS);
 };
@@ -221,9 +221,7 @@ setupOpen.addEventListener('keydown', function (evt) {
 });
 
 // Закрываем окно настроек по клику
-setupClose.addEventListener('click', function () {
-  closeSetup();
-});
+setupClose.addEventListener('click', closeSetup);
 
 // Закрываем окно настроек через клавиатуру
 setupClose.addEventListener('keydown', function (evt) {
@@ -232,20 +230,14 @@ setupClose.addEventListener('keydown', function (evt) {
   }
 });
 
-//
-wizardCoat.addEventListener('click', function () {
-  setRandomCoatColor();
-});
+// По клику на плащ меняем его цвет на случайный
+wizardCoat.addEventListener('click', setRandomCoatColor);
 
-//
-wizardEyes.addEventListener('click', function () {
-  setRandomEyesColor();
-});
+// По клику на глаза меняем их цвет на случайный
+wizardEyes.addEventListener('click', setRandomEyesColor);
 
-//
-wizardFireball.addEventListener('click', function () {
-  setRandomFireballColor();
-});
+// По клику на фаербол меняем его цвет на случайный
+wizardFireball.addEventListener('click', setRandomFireballColor);
 
 // -------------
 
