@@ -7,17 +7,76 @@
 // Количество требуемых случайных персонажей
 var SIMILAR_WIZARDS_AMOUNT = 4;
 
+// Коды клавиш
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
 // Имена
-var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
+var WIZARD_NAMES = [
+  'Иван',
+  'Хуан Себастьян',
+  'Мария',
+  'Кристоф',
+  'Виктор',
+  'Юлия',
+  'Люпита',
+  'Вашингтон'
+];
 
 // Фамилии
-var WIZARD_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
+var WIZARD_SURNAMES = [
+  'да Марья',
+  'Верон',
+  'Мирабелла',
+  'Вальц',
+  'Онопко',
+  'Топольницкая',
+  'Нионго',
+  'Ирвинг'
+];
 
 // Цвета плаща
-var WIZARD_COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
+var WIZARD_COAT_COLORS = [
+  'rgb(101, 137, 164)',
+  'rgb(241, 43, 107)',
+  'rgb(146, 100, 161)',
+  'rgb(56, 159, 117)',
+  'rgb(215, 210, 55)',
+  'rgb(0, 0, 0)'
+];
 
 // Цвета глаз
-var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
+var WIZARD_EYES_COLORS = [
+  'black',
+  'red',
+  'blue',
+  'yellow',
+  'green'
+];
+
+// Цвета фаерболов
+var WIZARD_FIREBALL_COLORS = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848'
+];
+
+// -------------
+
+
+// -------------
+// ПЕРЕМЕННЫЕ
+// -------------
+
+//
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = setup.querySelector('.setup-close');
+var wizardCoat = setup.querySelector('.wizard-coat');
+var wizardEyes = setup.querySelector('.wizard-eyes');
+var wizardFireball = setup.querySelector('.setup-fireball-wrap');
 
 // -------------
 
@@ -30,10 +89,6 @@ var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var getRandomArrayElement = function (array) {
   var id = Math.floor(Math.random() * array.length);
   var element = array[id];
-
-  // Удаляем уже использованный элемент из массива, чтобы все перснажи были уникальными
-  // Нужно отключить если количество требуемых персонажей больше чем случайных значений(5)
-  array.splice(id, 1);
 
   return element;
 };
@@ -57,9 +112,21 @@ var generateRandomWizardsArray = function (amount) {
   return array;
 };
 
-// Показываем блок "Настройки"
-var showSetup = function () {
-  document.querySelector('.setup').classList.remove('hidden');
+// Показываем окно "Настройки"
+var openSetup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+// Скрываем окно "Настройки"
+var closeSetup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+// Проверяем открыто ли окно "Настройки"
+var checkIsSetupOpen = function () {
+  return setup.classList.contains('hidden') ? false : true;
 };
 
 // Генерируем DOM-элемент персонажа
@@ -102,15 +169,75 @@ var renderSimilarWizards = function (array) {
 var showSimilarWizards = function () {
   document.querySelector('.setup-similar').classList.remove('hidden');
 };
+
+// Устанавливаем случайный цвет для плаща
+var setRandomCoatColor = function () {
+  wizardCoat.style.fill = getRandomArrayElement(WIZARD_COAT_COLORS);
+};
+
+// Устанавливаем случайный цвет для глаз
+var setRandomEyesColor = function () {
+  wizardEyes.style.fill = getRandomArrayElement(WIZARD_EYES_COLORS);
+};
+
+// Устанавливаем случайный цвет для фаербола
+var setRandomFireballColor = function () {
+  wizardFireball.style.background = getRandomArrayElement(WIZARD_FIREBALL_COLORS);
+};
+
+// Если нажата клавише ESC при открытом окне настроек
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && !evt.target.classList.contains('setup-user-name')) {
+    closeSetup();
+  }
+};
+
 // -------------
 
 
 // -------------
-// Задачи
+// СОБЫТИЯ
 // -------------
 
-// Показываем блок "Настройки"
-showSetup();
+// Открываем окно настроек по клику
+setupOpen.addEventListener('click', function () {
+  if (!checkIsSetupOpen()) {
+    openSetup();
+  }
+});
+
+// Открываем окно настроек через клавиатуру
+setupOpen.addEventListener('keydown', function (evt) {
+  if (!checkIsSetupOpen() && evt.keyCode === ENTER_KEYCODE) {
+    openSetup();
+  }
+});
+
+// Закрываем окно настроек по клику
+setupClose.addEventListener('click', closeSetup);
+
+// Закрываем окно настроек через клавиатуру
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeSetup();
+  }
+});
+
+// По клику на плащ меняем его цвет на случайный
+wizardCoat.addEventListener('click', setRandomCoatColor);
+
+// По клику на глаза меняем их цвет на случайный
+wizardEyes.addEventListener('click', setRandomEyesColor);
+
+// По клику на фаербол меняем его цвет на случайный
+wizardFireball.addEventListener('click', setRandomFireballColor);
+
+// -------------
+
+
+// -------------
+// ЗАДАЧИ
+// -------------
 
 // Генерируем массив случайных персонажей
 var similarWizards = generateRandomWizardsArray(SIMILAR_WIZARDS_AMOUNT);
