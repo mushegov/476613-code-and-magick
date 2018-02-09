@@ -185,14 +185,7 @@ var setRandomFireballColor = function () {
   wizardFireball.style.background = getRandomArrayElement(WIZARD_FIREBALL_COLORS);
 };
 
-// -------------
-
-
-// -------------
-// ОБРАБОТЧИКИ
-// -------------
-
-//
+// Если нажата клавише ESC при открытом окне настроек
 var onPopupEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE && !evt.target.classList.contains('setup-user-name')) {
     closeSetup();
